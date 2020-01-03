@@ -25,9 +25,9 @@ import com.google.android.gms.vision.face.FaceDetector;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class RNEyeTracking extends ReactContextBaseJavaModule {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "RNEyeTracking";
     VideoView videoView;
     EditText textView;
 
