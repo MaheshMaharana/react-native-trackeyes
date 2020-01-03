@@ -1,0 +1,22 @@
+{
+  "name": "react-native-trackeye",
+  "version": "1.0.0",
+  "description": "Android Mobile Eye tracking",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaheshMaharana/react-native-trackeyes.git"
+  },
+  "keywords": [
+    "eye-tracking"
+  ],
+  "author": "Mahesh Maharana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaheshMaharana/react-native-trackeyes/issues"
+  },
+  "homepage": "https://github.com/MaheshMaharana/react-native-trackeyes#readme"
+}
