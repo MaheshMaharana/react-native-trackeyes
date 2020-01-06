@@ -4,8 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+// import androidx.core.app.ActivityCompat;
+// import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -14,7 +14,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReadableMap;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.MultiProcessor;
@@ -26,7 +30,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class RNEyeTracking extends ReactContextBaseJavaModule {
-
+ public RNEyeTracking(ReactApplicationContext reactContext) {
+    super(reactContext);
+   reactContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+      
+  }
     private static final String TAG = "RNEyeTracking";
     VideoView videoView;
     EditText textView;
@@ -37,22 +45,22 @@ public class RNEyeTracking extends ReactContextBaseJavaModule {
 
     CameraSource cameraSource;
 
-    @Override
+    @ReactMethod
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
-            Toast.makeText(this, "Grant Permission and restart app", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        // if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        //     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        //     Toast.makeText(this, "Grant Permission and restart app", Toast.LENGTH_SHORT).show();
+        // }
+        // else {
             videoView = findViewById(R.id.videoView);
             textView = findViewById(R.id.textView);
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
             videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.videoplayback));
             videoView.start();
             createCameraSource();
-        }
+        // }
     }
 
 
@@ -65,7 +73,7 @@ public class RNEyeTracking extends ReactContextBaseJavaModule {
 
         }
 
-        @Override
+        @ReactMethod
         public void onUpdate(Detector.Detections<Face> detections, Face face) {
             if (face.getIsLeftEyeOpenProbability() > THRESHOLD || face.getIsRightEyeOpenProbability() > THRESHOLD) {
                 Log.i(TAG, "onUpdate: Eyes Detected");
@@ -82,13 +90,13 @@ public class RNEyeTracking extends ReactContextBaseJavaModule {
             }
         }
 
-        @Override
+        @ReactMethod
         public void onMissing(Detector.Detections<Face> detections) {
             super.onMissing(detections);
             showStatus("Face Not Detected yet!");
         }
 
-        @Override
+        @ReactMethod
         public void onDone() {
             super.onDone();
         }
@@ -105,7 +113,7 @@ public class RNEyeTracking extends ReactContextBaseJavaModule {
             return new EyesTracker();
         }
     }
-
+@ReactMethod
     public void createCameraSource() {
         FaceDetector detector = new FaceDetector.Builder(this)
                 .setTrackingEnabled(true)
@@ -121,16 +129,16 @@ public class RNEyeTracking extends ReactContextBaseJavaModule {
                 .build();
 
         try {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
+            // if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            //     // TODO: Consider calling
+            //     //    ActivityCompat#requestPermissions
+            //     // here to request the missing permissions, and then overriding
+            //     //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //     //                                          int[] grantResults)
+            //     // to handle the case where the user grants the permission. See the documentation
+            //     // for ActivityCompat#requestPermissions for more details.
+            //     return;
+            // }
             cameraSource.start();
         }
         catch (IOException e) {
@@ -138,21 +146,21 @@ public class RNEyeTracking extends ReactContextBaseJavaModule {
         }
     }
 
-    @Override
+    @ReactMethod
     protected void onResume() {
         super.onResume();
         if (cameraSource != null) {
             try {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
+                // if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                //     // TODO: Consider calling
+                //     //    ActivityCompat#requestPermissions
+                //     // here to request the missing permissions, and then overriding
+                //     //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //     //                                          int[] grantResults)
+                //     // to handle the case where the user grants the permission. See the documentation
+                //     // for ActivityCompat#requestPermissions for more details.
+                //     return;
+                // }
                 cameraSource.start();
             }
             catch (IOException e) {
@@ -161,7 +169,7 @@ public class RNEyeTracking extends ReactContextBaseJavaModule {
         }
     }
 
-    @Override
+    @ReactMethod
     protected void onPause() {
         super.onPause();
         if (cameraSource!=null) {
@@ -171,7 +179,7 @@ public class RNEyeTracking extends ReactContextBaseJavaModule {
             videoView.pause();
         }
     }
-
+@ReactMethod
     public void showStatus(final String message) {
         runOnUiThread(new Runnable() {
             @Override
@@ -181,7 +189,7 @@ public class RNEyeTracking extends ReactContextBaseJavaModule {
         });
     }
 
-    @Override
+   @ReactMethod
     protected void onDestroy() {
         super.onDestroy();
         if (cameraSource!=null) {
